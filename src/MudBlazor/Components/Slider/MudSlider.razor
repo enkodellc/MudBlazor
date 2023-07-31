@@ -26,7 +26,7 @@
 		@if (TickMarks)
 		{
 			<div class="mud-slider-inner-container">
-				<div class="mud-slider-tickmarks">
+                <div class="mud-slider-tickmarks" style="@(IsRangeSlider ? $"margin-top:22px;" : "")">
 					@for (int i = 0; i < _tickMarkCount; i++)
 					{
 						int current = i;
