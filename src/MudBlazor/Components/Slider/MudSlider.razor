@@ -19,8 +19,17 @@
 
         @if (Variant == Variant.Filled)
         {
-            var marginTop = IsRangeSlider ? "0" : "22px";
-
+            <div class="mud-slider-inner-container">
+                <div class="mud-slider-filled" style="@(IsRangeSlider ? $"width:{width}%; margin-left:{left}%; margin-top:22px;" : $"width:{width}%;")"></div>
+			</div>
+		}
+		@if (TickMarks)
+		{
+			<div class="mud-slider-inner-container">
+                <div class="mud-slider-tickmarks" style="@(IsRangeSlider ? $"margin-top:22px;" : "")">
+					@for (int i = 0; i < _tickMarkCount; i++)
+					{
+						int current = i;
             <div class="mud-slider-inner-container">
                 <div class="mud-slider-filled" style="@(IsRangeSlider ? $"width:{width}%; margin-left:{left}%; margin-top:{marginTop};" : $"width:{width}%;")"></div>
             </div>
