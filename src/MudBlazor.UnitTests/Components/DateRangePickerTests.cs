@@ -117,7 +117,7 @@ namespace MudBlazor.UnitTests.Components
         }
 
         [Test]
-        public void Open_SelectTheSameDateTwice_RangeStartShouldEqualsEnd()
+        public void Open_SelectTheSameDateTwice_rangeStartShouldEqualsEnd()
         {
             var comp = OpenPicker();
             // clicking a day button to select a date

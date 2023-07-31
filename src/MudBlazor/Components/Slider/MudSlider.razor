@@ -15,18 +15,18 @@
         <MudText Typo="Typo.body1">@ChildContent</MudText>
     }
 
-    <div class="@(IsRangeSlider ? "mud-slider-container mud-range-container" : "mud-slider-container")">
+    <div class="@(Range ? "mud-slider-container mud-range-container" : "mud-slider-container")">
 
         @if (Variant == Variant.Filled)
         {
             <div class="mud-slider-inner-container">
-                <div class="mud-slider-filled" style="@(IsRangeSlider ? $"width:{width}%; margin-left:{left}%; margin-top:22px;" : $"width:{width}%;")"></div>
+                <div class="mud-slider-filled" style="@(Range ? $"width:{width}%; margin-left:{left}%; margin-top:22px;" : $"width:{width}%;")"></div>
 			</div>
 		}
 
         @if (TickMarks)
         {
-            <div class="mud-slider-inner-container" style="@(IsRangeSlider ? $"margin-top:11px;" : "")">
+            <div class="mud-slider-inner-container" style="@(Range ? $"margin-top:11px;" : "")">
                 @SliderTickMarks()
             </div>
         }
@@ -36,7 +36,7 @@
 
         @SliderValueLabel(left, Value?.ToString())
         
-        @if (IsRangeSlider)
+        @if (Range)
         {
             <input class="mud-slider-input" aria-valuenow="@UpperValue" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@(Disabled || _userInvalidatedRange)"
                    @bind-value="@UpperText" @bind-value:event="@(Immediate ? "oninput" : "onchange")" />

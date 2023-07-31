@@ -21,7 +21,7 @@ namespace MudBlazor
         protected string? _max = "100";
         protected string? _step = "1";
 
-        protected bool _isRangeSlider = false;
+        protected bool _range = false;
         protected string? _upperValue;
 
 
@@ -37,10 +37,10 @@ namespace MudBlazor
         /// </summary>
         [Parameter]
         [Category(CategoryTypes.Slider.Validation)]
-        public bool IsRangeSlider
+        public bool Range
         {
-            get => _isRangeSlider;
-            set => _isRangeSlider = value;
+            get => _range;
+            set => _range = value;
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace MudBlazor
                     return;
                 }
 
-                if (IsRangeSlider && _upperValue != null && Convert.ToDecimal(d) >= Convert.ToDecimal(UpperValue))
+                if (Range && _upperValue != null && Convert.ToDecimal(d) >= Convert.ToDecimal(UpperValue))
                 {
                     _userInvalidatedRange = true;
                     return;
@@ -137,7 +137,7 @@ namespace MudBlazor
                     return;
                 }
 
-                if (IsRangeSlider && _value != null && Convert.ToDecimal(d) <= Convert.ToDecimal(Value))
+                if (Range && _value != null && Convert.ToDecimal(d) <= Convert.ToDecimal(Value))
                 {
                     _userInvalidatedRange = true;
                     return;
@@ -164,7 +164,7 @@ namespace MudBlazor
                 {
                     return;
                 }
-                if (IsRangeSlider && Convert.ToDecimal(value) >= Convert.ToDecimal(UpperValue))
+                if (Range && Convert.ToDecimal(value) >= Convert.ToDecimal(UpperValue))
                 {
                     _userInvalidatedRange = true;
                     return;
@@ -185,7 +185,7 @@ namespace MudBlazor
                     return;
                 }
 
-                if (IsRangeSlider && Convert.ToDecimal(value) <= Convert.ToDecimal(Value))
+                if (Range && Convert.ToDecimal(value) <= Convert.ToDecimal(Value))
                 {
                     _userInvalidatedRange = true;
                     return;
@@ -265,7 +265,7 @@ namespace MudBlazor
             var max = Convert.ToDouble(Max);
             var value = Convert.ToDouble(Value);
 
-            if (IsRangeSlider)
+            if (Range)
             {
                 value = (Convert.ToDouble(UpperValue) - Convert.ToDouble(Value));
             }
@@ -278,7 +278,7 @@ namespace MudBlazor
 
         private double CalculateLeft()
         {
-            if (!IsRangeSlider) return 0;
+            if (!Range) return 0;
 
             var min = Convert.ToDouble(Min);
             var max = Convert.ToDouble(Max);
