@@ -37,15 +37,18 @@
                @bind-value="@Text" @bind-value:event="@(Immediate ? "oninput" : "onchange")" />
 
         @SliderValueLabel(left, width, Value?.ToString())
-
-        <input class="mud-slider-input" aria-valuenow="@UpperValue" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@(Disabled || _userInvalidatedRange)"
-               @bind-Value="@UpperText" @bind-Value:event="@(Immediate ? "oninput" : "onchange")"/>
-
-        @if (ValueLabel)
+        
+        @if (IsRangeSlider)
         {
-            <div class="mud-slider-value-label" style="@($"left:{upperLeft}%;")">
-                @UpperValue?.ToString()
-            </div>
+            <input class="mud-slider-input" aria-valuenow="@UpperValue" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@(Disabled || _userInvalidatedRange)"
+                   @bind-value="@UpperText" @bind-value:event="@(Immediate ? "oninput" : "onchange")" />
+
+            @if (ValueLabel)
+            {
+                <div class="mud-slider-value-label" style="@($"left:{upperLeft}%;")">
+                    @UpperValue?.ToString()
+                </div>
+            }
         }
     </div>
 
