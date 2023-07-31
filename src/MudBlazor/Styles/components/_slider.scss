@@ -209,10 +209,9 @@
         left: 0;
     }
 
-    .mud-range-container .mud-slider-input:last-of-type {
+    .mud-range-container .mud-slider-input {
         position: absolute;
         pointer-events: none;
-        top: 0;
     }
 
     .mud-range-container input[type=range]::-webkit-slider-thumb {
