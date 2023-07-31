@@ -113,7 +113,7 @@ namespace MudBlazor
                     return;
                 }
 
-                if (IsRangeSlider && Convert.ToDecimal(d) >= Convert.ToDecimal(UpperValue))
+                if (IsRangeSlider && _upperValue != null && Convert.ToDecimal(d) >= Convert.ToDecimal(UpperValue))
                 {
                     _userInvalidatedRange = true;
                     return;
@@ -137,7 +137,7 @@ namespace MudBlazor
                     return;
                 }
 
-                if (IsRangeSlider && Convert.ToDecimal(d) <= Convert.ToDecimal(Value))
+                if (IsRangeSlider && _value != null && Convert.ToDecimal(d) <= Convert.ToDecimal(Value))
                 {
                     _userInvalidatedRange = true;
                     return;
