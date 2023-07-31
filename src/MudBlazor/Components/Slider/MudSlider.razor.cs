@@ -21,6 +21,20 @@ namespace MudBlazor
         protected string? _max = "100";
         protected string? _step = "1";
 
+        protected bool _isRangeSlider = false;
+        protected string? _upperValue;
+
+        /// <summary>
+        /// If this is a Range Slider
+        /// </summary>
+        [Parameter]
+        [Category(CategoryTypes.Slider.Validation)]
+        public bool IsRangeSlider
+        {
+            get => _isRangeSlider;
+            set => _isRangeSlider = value;
+        }
+
         /// <summary>
         /// The minimum allowed value of the slider. Should not be equal to max.
         /// </summary>
@@ -76,6 +90,7 @@ namespace MudBlazor
         public Converter<T> Converter { get; set; } = new DefaultConverter<T>() { Culture = CultureInfo.InvariantCulture };
 
         [Parameter] public EventCallback<T> ValueChanged { get; set; }
+        [Parameter] public EventCallback<T> UpperValueChanged { get; set; }
 
         [Parameter]
         [Category(CategoryTypes.Slider.Data)]
@@ -92,6 +107,24 @@ namespace MudBlazor
 
                 _value = d;
                 ValueChanged.InvokeAsync(value);
+            }
+        }
+
+        [Parameter]
+        [Category(CategoryTypes.Slider.Data)]
+        public T? UpperValue
+        {
+            get => Converter.Get(_upperValue);
+            set
+            {
+                var d = Converter.Set(value);
+                if (_upperValue == d)
+                {
+                    return;
+                }
+
+                _upperValue = d;
+                UpperValueChanged.InvokeAsync(value);
             }
         }
 
@@ -114,6 +147,37 @@ namespace MudBlazor
 
                 _value = value;
                 ValueChanged.InvokeAsync(Value);
+            }
+        }
+
+        protected string? UpperText
+        {
+            get => _upperValue;
+            set
+            {
+                if (_upperValue == value)
+                {
+                    return;
+                }
+
+                _upperValue = value;
+                UpperValueChanged.InvokeAsync(UpperValue);
+            }
+        }
+
+        protected void EvaluateValues(bool isMinEdited)
+        {
+            if (IsRangeSlider)
+            {
+                if (!isMinEdited && Convert.ToDecimal(UpperValue) < Convert.ToDecimal(Value))
+                {
+                    Value = UpperValue;
+                }
+
+                if (isMinEdited && Convert.ToDecimal(Value) > Convert.ToDecimal(UpperValue))
+                {
+                    UpperValue = Value;
+                }
             }
         }
 
@@ -180,13 +244,31 @@ namespace MudBlazor
             }
         }
 
-        private double CalculatePosition()
+        private double CalculateWidth()
         {
             var min = Convert.ToDouble(Min);
             var max = Convert.ToDouble(Max);
             var value = Convert.ToDouble(Value);
-            var result = 100.0 * (value - min) / (max - min);
 
+            if (IsRangeSlider)
+            {
+                value = (Convert.ToDouble(UpperValue) - Convert.ToDouble(Value));
+            }
+
+            var result = 100.0 * (value - min) / (max - min);
+            result = Math.Min(Math.Max(0, result), 100);
+
+            return Math.Round(result, 2);
+        }
+
+        private double CalculateLeft()
+        {
+            if (!IsRangeSlider) return 0;
+
+            var min = Convert.ToDouble(Min);
+            var max = Convert.ToDouble(Max);
+            var value = Convert.ToDouble(Value);
+            var result = 100.0 * (value - min) / (max - min);
             result = Math.Min(Math.Max(0, result), 100);
 
             return Math.Round(result, 2);
