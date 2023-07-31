@@ -24,6 +24,14 @@ namespace MudBlazor
         protected bool _isRangeSlider = false;
         protected string? _upperValue;
 
+
+        /// <summary>
+        /// This will be set to true if the user sets the lower value to be greater than the upper value
+        /// or vice versa. It will detach the user from the slider and then the value will be reset
+        /// in the razor file.
+        /// </summary>
+        private bool _userInvalidatedRange;
+
         /// <summary>
         /// If this is a Range Slider
         /// </summary>
@@ -105,6 +113,12 @@ namespace MudBlazor
                     return;
                 }
 
+                if (IsRangeSlider && _upperValue != null && Convert.ToDecimal(d) >= Convert.ToDecimal(UpperValue))
+                {
+                    _userInvalidatedRange = true;
+                    return;
+                }
+
                 _value = d;
                 ValueChanged.InvokeAsync(value);
             }
@@ -120,6 +134,12 @@ namespace MudBlazor
                 var d = Converter.Set(value);
                 if (_upperValue == d)
                 {
+                    return;
+                }
+
+                if (IsRangeSlider && _value != null && Convert.ToDecimal(d) <= Convert.ToDecimal(Value))
+                {
+                    _userInvalidatedRange = true;
                     return;
                 }
 
@@ -144,6 +164,11 @@ namespace MudBlazor
                 {
                     return;
                 }
+                if (IsRangeSlider && Convert.ToDecimal(value) >= Convert.ToDecimal(UpperValue))
+                {
+                    _userInvalidatedRange = true;
+                    return;
+                }
 
                 _value = value;
                 ValueChanged.InvokeAsync(Value);
@@ -160,24 +185,14 @@ namespace MudBlazor
                     return;
                 }
 
+                if (IsRangeSlider && Convert.ToDecimal(value) <= Convert.ToDecimal(Value))
+                {
+                    _userInvalidatedRange = true;
+                    return;
+                }
+
                 _upperValue = value;
                 UpperValueChanged.InvokeAsync(UpperValue);
-            }
-        }
-
-        protected void EvaluateValues(bool isMinEdited)
-        {
-            if (IsRangeSlider)
-            {
-                if (!isMinEdited && Convert.ToDecimal(UpperValue) < Convert.ToDecimal(Value))
-                {
-                    Value = UpperValue;
-                }
-
-                if (isMinEdited && Convert.ToDecimal(Value) > Convert.ToDecimal(UpperValue))
-                {
-                    UpperValue = Value;
-                }
             }
         }
 

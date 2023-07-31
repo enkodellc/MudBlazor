@@ -10,14 +10,14 @@
 }
 
 <div class="@Classname" style="@Style">
-	@if (ChildContent != null)
-	{
-		<MudText Typo="Typo.body1">@ChildContent</MudText>
-	}
+    @if (ChildContent != null)
+    {
+        <MudText Typo="Typo.body1">@ChildContent</MudText>
+    }
 
     <div class="@(IsRangeSlider ? "mud-slider-container mud-range-container" : "mud-slider-container")">
 
-		@if (Variant == Variant.Filled)
+        @if (Variant == Variant.Filled)
         {
             <div class="mud-slider-inner-container">
                 <div class="mud-slider-filled" style="@(IsRangeSlider ? $"width:{width}%; margin-left:{left}%; margin-top:22px;" : $"width:{width}%;")"></div>
@@ -30,34 +30,28 @@
 					@for (int i = 0; i < _tickMarkCount; i++)
 					{
 						int current = i;
-
-						<div class="d-flex flex-column relative">
-							<span class="mud-slider-track-tick" />
-							@if (TickMarkLabels != null && current < TickMarkLabels.Length)
-							{
-								<MudText Class="mud-slider-track-tick-label" Typo="Typo.body2">@TickMarkLabels[current]</MudText>
-							}
-						</div>
-					}
-				</div>
-			</div>
-		}
-
-		<input class="mud-slider-input" aria-valuenow="@Value" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@Disabled"
-            @bind-value="@Text" @bind-value:event="@(Immediate ? "oninput" : "onchange")" @onchange="(() => EvaluateValues(true))" />
-        
-        @if (ValueLabel)
-        {
-            <div class="mud-slider-value-label" style="@(IsRangeSlider ? $"left:{left}%;" : $"left:{width}%;" )">
-                @Value?.ToString()
+            <div class="mud-slider-inner-container">
+                <div class="mud-slider-filled" style="@(IsRangeSlider ? $"width:{width}%; margin-left:{left}%; margin-top:{marginTop};" : $"width:{width}%;")"></div>
             </div>
         }
 
-        @if(IsRangeSlider)
+        @if (TickMarks)
         {
-            <input class="mud-slider-input" aria-valuenow="@UpperValue" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@Disabled"
-            @bind-UpperValue="@UpperText" @bind-UpperValue:event="@(Immediate ? "oninput" : "onchange")" @onchange="(() => EvaluateValues(false))" />
-            
+            <div class="mud-slider-inner-container">
+                @SliderTickMarks()
+            </div>
+        }
+
+        <input class="mud-slider-input" aria-valuenow="@Value" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@(Disabled || _userInvalidatedRange)"
+               @bind-value="@Text" @bind-value:event="@(Immediate ? "oninput" : "onchange")" />
+
+        @SliderValueLabel(left, width, Value?.ToString())
+        
+        @if (IsRangeSlider)
+        {
+            <input class="mud-slider-input" aria-valuenow="@UpperValue" aria-valuemin="@_min" aria-valuemax="@_max" role="slider" @attributes="UserAttributes" type="range" min="@_min" max="@_max" step="@_step" disabled="@(Disabled || _userInvalidatedRange)"
+                   @bind-value="@UpperText" @bind-value:event="@(Immediate ? "oninput" : "onchange")" />
+
             @if (ValueLabel)
             {
                 <div class="mud-slider-value-label" style="@($"left:{upperLeft}%;")">
@@ -65,6 +59,44 @@
                 </div>
             }
         }
-	</div>
+    </div>
 
 </div>
+
+@if (_userInvalidatedRange)
+{
+    _userInvalidatedRange = false;
+    StateHasChanged();
+}
+
+@code
+{
+    private RenderFragment SliderValueLabel(string left, string width, string value)
+    {
+        @if (ValueLabel)
+        {
+            return @<div class="mud-slider-value-label" style="@(IsRangeSlider ? $"left:{left}%;" : $"left:{width}%;")">
+                       @value
+                   </div>;
+        }
+        return null;
+    }
+
+    private RenderFragment SliderTickMarks()
+    {
+        return @<div class="mud-slider-tickmarks">
+                   @for (int i = 0; i < _tickMarkCount; i++)
+                   {
+                       int current = i;
+
+                       <div class="d-flex flex-column relative">
+                           <span class="mud-slider-track-tick"/>
+                           @if (TickMarkLabels != null && current < TickMarkLabels.Length)
+                           {
+                               <MudText Class="mud-slider-track-tick-label" Typo="Typo.body2">@TickMarkLabels[current]</MudText>
+                           }
+                       </div>
+                   }
+               </div>;
+    }
+}
