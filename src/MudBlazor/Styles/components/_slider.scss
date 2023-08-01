@@ -209,6 +209,11 @@
         left: 0;
     }
 
+    .mud-range-container {
+        align-items: center;
+        margin: 20px 0;
+    }
+
     .mud-range-container .mud-slider-input {
         position: absolute;
         pointer-events: none;
